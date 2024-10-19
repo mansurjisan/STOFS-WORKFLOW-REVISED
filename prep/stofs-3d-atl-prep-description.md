@@ -12,7 +12,7 @@ The core of the preprocessing workflow is handled by `exstofs_3d_atl_prep_proces
 
 The `exstofs_3d_atl_prep_processing.sh` script performs the following key operations:
 
-1. **Parameter File Creation**: Calls `stofs_3d_atl_create_param_nml.sh` to generate `param.nml`, which contains essential model parameters and settings.
+1. **Namelist File Creation**: Calls `stofs_3d_atl_create_param_nml.sh` to generate `param.nml`, which contains essential model parameters and settings.
 
 2. **Tidal Boundary Conditions**: Executes `stofs_3d_atl_create_bctides_in.sh` to create `bctides.in`, defining tidal boundary conditions for the model.
 
