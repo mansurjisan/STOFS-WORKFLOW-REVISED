@@ -1,0 +1,83 @@
+suite stofs
+
+    edit STOFS_HOME '/path/to/stofs'
+    edit ECF_FILES '%STOFS_HOME%/ecf'
+    edit SCRIPTS '%STOFS_HOME%/scripts'
+    
+    edit STOFS_SYSTEM 'STOFS3D'  # or 'STOFS2D_GLOBAL'
+
+    family main
+        task init
+            edit ECF_SCRIPT '%ECF_FILES%/init.ecf'
+
+        task load_config
+            trigger ./init == complete
+            edit ECF_SCRIPT '%ECF_FILES%/load_config.ecf'
+
+        family preparation
+            trigger ../load_config == complete
+
+            task common_prep
+                edit ECF_SCRIPT '%ECF_FILES%/common_prep.ecf'
+
+            family system_specific_prep
+                trigger ./common_prep == complete
+                
+                task stofs3d_prep
+                    trigger %STOFS_SYSTEM% == 'STOFS3D'
+                    edit ECF_SCRIPT '%ECF_FILES%/stofs3d_prep.ecf'
+                
+                task stofs2d_global_prep
+                    trigger %STOFS_SYSTEM% == 'STOFS2D_GLOBAL'
+                    edit ECF_SCRIPT '%ECF_FILES%/stofs2d_global_prep.ecf'
+            endfamily
+
+            task verify_prep
+                trigger ./system_specific_prep == complete
+                edit ECF_SCRIPT '%ECF_FILES%/verify_prep.ecf'
+        endfamily
+
+        family model_run
+            trigger ../preparation/verify_prep == complete
+            
+            task allocate_resources
+                edit ECF_SCRIPT '%ECF_FILES%/allocate_resources.ecf'
+
+            task run_model
+                trigger ./allocate_resources == complete
+                edit ECF_SCRIPT '%ECF_FILES%/%STOFS_SYSTEM%_run.ecf'
+
+            task verify_model_run
+                trigger ./run_model == complete
+                edit ECF_SCRIPT '%ECF_FILES%/verify_model_run.ecf'
+        endfamily
+
+        family post_processing
+            trigger ../model_run/verify_model_run == complete
+
+            task common_post
+                edit ECF_SCRIPT '%ECF_FILES%/common_post.ecf'
+            
+            task system_specific_post
+                trigger ./common_post == complete
+                edit ECF_SCRIPT '%ECF_FILES%/%STOFS_SYSTEM%_post.ecf'
+
+            task verify_post
+                trigger ./system_specific_post == complete
+                edit ECF_SCRIPT '%ECF_FILES%/verify_post.ecf'
+        endfamily
+
+        task cleanup
+            trigger ../post_processing/verify_post == complete
+            edit ECF_SCRIPT '%ECF_FILES%/cleanup.ecf'
+
+        task send_notifications
+            trigger ./cleanup == complete
+            edit ECF_SCRIPT '%ECF_FILES%/send_notifications.ecf'
+    endfamily
+
+    # Define a cron schedule for the suite
+    clock real
+    cron 00:00 23:00 12:00  # Adjust as needed
+
+endsuite
