@@ -1,3 +1,4 @@
+```mermaid
 flowchart LR
  subgraph Config["Configuration"]
     direction TB
