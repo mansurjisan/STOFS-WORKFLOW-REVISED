@@ -70,7 +70,6 @@ flowchart LR
     E4 --> E5
     F --> G["Send Notifications"]
 
-    E1@{ shape: rounded}
      B1:::commonNode
      B2:::commonNode
      B3:::commonNode
