@@ -1,3 +1,5 @@
+
+
 Old (Current) Structure                | New (Proposed) Structure
 ---------------------------------------|---------------------------------------
 stofs/                                 | stofs/
@@ -42,10 +44,19 @@ stofs/                                 | stofs/
                                        | │   ├── stofs3d_model
                                        | │   └── stofs2d_global_model
                                        | ├── ush/
-                                       | │   ├── nco_wrappers.sh
-                                       | │   ├── error_handling.sh
-                                       | │   ├── logging.sh
-                                       | │   └── data_validation.sh
+                                       | │   ├── common/
+                                       | │   │   ├── utilities.py
+                                       | │   │   ├── data_processing.py
+                                       | │   │   ├── nco_wrappers.sh
+                                       | │   │   ├── error_handling.sh
+                                       | │   │   ├── logging.sh
+                                       | │   │   └── data_validation.sh
+                                       | │   ├── stofs3d/
+                                       | │   │   ├── specific_3d_script.py
+                                       | │   │   └── ...
+                                       | │   └── stofs2d_global/
+                                       | │       ├── specific_2d_script.py
+                                       | │       └── ...
                                        | ├── parm/
                                        | ├── sorc/
                                        | ├── config/
